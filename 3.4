@@ -1,0 +1,21 @@
+int float_f2i(unsigned uf)
+{
+    int sign = uf >> 31;
+    int frac = (uf & 0x7FFFFF)| 0x800000;
+    int exp = (uf >> 23) & 0xFF;
+    int E = exp - 127;
+
+    if (E < 0)
+        return 0;
+    if (E >= 31)
+        return 0x80000000;
+    if (E > 23)
+        frac = frac << (E - 23);
+    else
+        frac = frac >> (23 - E);
+
+    if (sign)
+        return -frac;
+
+    return frac;
+}
