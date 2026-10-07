@@ -166,30 +166,22 @@ unsigned float_twice(unsigned uf) {
 
 // 3.4
 int float_f2i(unsigned uf) {
-    unsigned sign = uf >> 31;
-    unsigned frac = uf & 0x7FFFFF;
+    int sign = uf >> 31;
+    int frac = (uf & 0x7FFFFF) | 0x800000;
     int exp = (uf >> 23) & 0xFF;
-    int E;
-
-    if (exp == 0xFF)
-        return 0x80000000;
-
-    E = exp - 127;
+    int E = exp - 127;
 
     if (E < 0)
         return 0;
     if (E >= 31)
         return 0x80000000;
-
-    frac = frac | 0x800000;
-
     if (E > 23)
         frac = frac << (E - 23);
     else
         frac = frac >> (23 - E);
 
     if (sign)
-        return -(int)frac;
+        return -frac;
 
-    return (int)frac;
+    return frac;
 }
